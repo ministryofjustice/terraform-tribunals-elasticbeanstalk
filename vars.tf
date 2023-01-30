@@ -9,7 +9,7 @@ variable "instance_type" {
 
 variable "certificate" {
   type = string
-  default = "arn:aws:acm:eu-west-1:207640118376:certificate/29e9f6f6-5c58-4e59-9ee6-8ea65b6bb92d"
+  #default = "arn:aws:acm:eu-west-1:207640118376:certificate/29e9f6f6-5c58-4e59-9ee6-8ea65b6bb92d"
 }
 
 variable "vpc_id" {
