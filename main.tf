@@ -17,7 +17,7 @@ resource "aws_elastic_beanstalk_application" "eb-application" {
 resource "aws_elastic_beanstalk_environment" "eb-environment" {
   name                = var.application_name
   application         = aws_elastic_beanstalk_application.eb-application.name
-  solution_stack_name = "64bit Windows Server 2019 v2.10.5 running IIS 10.0"
+  solution_stack_name = "64bit Windows Server 2019 v2.11.0 running IIS 10.0"
   tier                = "WebServer"
   
   setting {
