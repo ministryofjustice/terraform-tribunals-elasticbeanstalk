@@ -20,8 +20,8 @@ variable "environment" {
   type = string
 }
 
-variable "vpc_security_group_id" {    
-}
+# variable "vpc_security_group_id" {    
+# }
 
 variable subnet_ids {
 }
