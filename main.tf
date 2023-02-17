@@ -2,7 +2,7 @@ data "aws_elastic_beanstalk_hosted_zone" "current" {}
 
 resource "aws_elastic_beanstalk_application" "eb-application" {
   name        = var.application_name
-  description = "this is the application elastic beanstalk Tribunal Decisions"
+  description = "this is the application elastic beanstalk Tribunal Decisions ${var.application_name}"
 }
 
 # resource "aws_subnet" "ec2subnet" {
@@ -29,7 +29,13 @@ resource "aws_elastic_beanstalk_environment" "eb-environment" {
   setting {
     namespace = "aws:ec2:vpc"
     name      = "Subnets"
-    value     = join(",", sort(var.subnet_ids))
+    value     = join(",", sort(var.private_subnet_ids))
+  }
+
+    setting {
+    namespace = "aws:ec2:vpc"
+    name      = "ELBSubnets"
+    value     = join(",", sort(var.public_subnet_ids))
   }
 
   setting {
@@ -248,12 +254,6 @@ resource "aws_elastic_beanstalk_environment" "eb-environment" {
     name      = "StickinessEnabled"
     value     = "true"
   }
-  # setting {
-  #   namespace = "aws:ec2:vpc"
-  #   name      = "ELBSubnets"
-  #   value     = join(",", sort(var.subnet_ids))
-  # }
-
 }
 
 # resource "aws_alb_listener" "https_redirect" {
