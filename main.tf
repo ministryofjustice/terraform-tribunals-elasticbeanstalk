@@ -103,6 +103,8 @@ resource "aws_elastic_beanstalk_environment" "eb-environment" {
     name      = "BreachDuration"
     value     = "5"
   }
+
+   ###=========================== Capacity ========================== ###
   setting {
     namespace = "aws:autoscaling:asg"
     name      = "EnableCapacityRebalancing"
@@ -151,16 +153,16 @@ resource "aws_elastic_beanstalk_environment" "eb-environment" {
 
 ###=========================== Environment Variables ========================== ###
 
-  setting {
-  namespace = "aws:elasticbeanstalk:application:environment"
-  name      = "AWS_ACCESS_KEY_ID"
-  value     = "AKIATAWCQYRUGLYS5254"
-  }
-  setting {
-    namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "AWS_SECRET_KEY"
-    value     = "Q3C4P2Y6yJANg95zE18dKC71RkBQfNqLOmJ4JpNE"
-  }
+  # setting {
+  # namespace = "aws:elasticbeanstalk:application:environment"
+  # name      = "AWS_ACCESS_KEY_ID"
+  # value     = "AKIATAWCQYRUGLYS5254"
+  # }
+  # setting {
+  #   namespace = "aws:elasticbeanstalk:application:environment"
+  #   name      = "AWS_SECRET_KEY"
+  #   value     = "Q3C4P2Y6yJANg95zE18dKC71RkBQfNqLOmJ4JpNE"
+  # }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "CurServer"
@@ -209,15 +211,30 @@ resource "aws_elastic_beanstalk_environment" "eb-environment" {
     name      = "LoadBalancerType"
     value     = "application"
   }
- setting { 
+  setting { 
     namespace = "aws:elbv2:listener:default"
     name      = "ListenerEnabled"
-    value     = false
+    value     = "true"
     }
   setting {
       namespace = "aws:elbv2:listener:443"
       name      = "ListenerEnabled"
-      value     = true
+      value     = "true"
+  }
+  setting {
+    namespace = "aws:elbv2:listener:default"
+    name      = "DefaultProcess"
+    value     = "default"
+  }
+  setting {
+    namespace = "aws:elbv2:listener:default"
+    name      = "Protocol"
+    value     = "HTTP"
+  }
+    setting {
+    namespace = "aws:elbv2:listener:443"
+    name      = "DefaultProcess"
+    value     = "default"
   }
   setting {
       namespace = "aws:elbv2:listener:443"
@@ -234,25 +251,51 @@ resource "aws_elastic_beanstalk_environment" "eb-environment" {
       name      = "SSLPolicy"
       value     = "ELBSecurityPolicy-2016-08"
   }
-  setting {
-      namespace = "aws:elasticbeanstalk:environment:process:default"
-      name      = "Port"
-      value     = 80
-  }
-  setting {
-      namespace = "aws:elasticbeanstalk:environment:process:default"
-      name      = "Protocol"
-      value     = "HTTP"
-  }
-  setting {
+  ##=========================== Environment Default Process ========================== ###
+   setting {
     namespace = "aws:elasticbeanstalk:environment:process:default"
     name      = "HealthCheckPath"
     value     = "/"
   }
-  setting {
+   setting {
     namespace = "aws:elasticbeanstalk:environment:process:default"
-    name      = "StickinessEnabled"
-    value     = "true"
+    name      = "HealthyThresholdCount"
+    value     = "5"
+  }
+   setting {
+    namespace = "aws:elasticbeanstalk:environment:process:default"
+    name      = "UnhealthyThresholdCount"
+    value     = "3"
+  }    
+   setting {
+    namespace = "aws:elasticbeanstalk:environment:process:default"
+    name      = "Port"
+    value     = 80
+  }
+  #  setting {
+  #   namespace = "aws:elasticbeanstalk:environment:process:default"
+  #   name      = "Protocol"
+  #   value     = "HTTP"
+  # }
+  #  setting {
+  #   namespace = "aws:elasticbeanstalk:environment:process:default"
+  #   name      = "StickinessEnabled"
+  #   value     = "true"
+  # }   
+   setting {
+    namespace = "aws:elasticbeanstalk:environment:process:default"
+    name      = "MatcherHTTPCode"
+    value     = "200-302"
+  }
+   setting {
+    namespace = "aws:elasticbeanstalk:environment:process:default"
+    name      = "HealthCheckTimeout"
+    value     = "5"
+  }
+   setting {
+    namespace = "aws:elasticbeanstalk:environment:process:default"
+    name      = "HealthCheckInterval"
+    value     = "15"
   }
 }
 
@@ -275,22 +318,22 @@ resource "aws_elastic_beanstalk_environment" "eb-environment" {
 #   }
 # }
 
-resource "aws_lb_listener" "https_redirect" {
-  load_balancer_arn = aws_elastic_beanstalk_environment.eb-environment.load_balancers[0]
-  port              = 80
-  protocol          = "HTTPS"
-  ssl_policy        = "ELBSecurityPolicy-2016-08"
-  certificate_arn   = var.certificate
+# resource "aws_lb_listener" "https_redirect" {
+#   load_balancer_arn = aws_elastic_beanstalk_environment.eb-environment.load_balancers[0]
+#   port              = 80
+#   protocol          = "HTTPS"
+#   ssl_policy        = "ELBSecurityPolicy-2016-08"
+#   certificate_arn   = var.certificate
 
 
-  default_action {
-    type = "redirect"
+#   default_action {
+#     type = "redirect"
 
-    redirect {
-      port        = "443"
-      protocol    = "HTTPS"
-      status_code = "HTTP_301"
-    }
-  }
+#     redirect {
+#       port        = "443"
+#       protocol    = "HTTPS"
+#       status_code = "HTTP_301"
+#     }
+#   }
 
-}
+# }
