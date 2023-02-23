@@ -43,11 +43,11 @@ resource "aws_elastic_beanstalk_environment" "eb-environment" {
     name      = "IamInstanceProfile"
     value     = "aws-elasticbeanstalk-ec2-role"
   }
-  #  setting {
-  #    namespace = "aws:autoscaling:launchconfiguration"
-  #    name = "SecurityGroups"
-  #    value = var.vpc_security_group_id
-  #  }
+   setting {
+     namespace = "aws:autoscaling:launchconfiguration"
+     name = "SecurityGroups"
+     value = var.vpc_security_group_id
+   }
   setting {
     namespace = "aws:elasticbeanstalk:command"
     name      = "Timeout"
